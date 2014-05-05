@@ -1,7 +1,5 @@
 console.error('reloaded');
 
-var firebug_ids = [704094,717749,892935,895887,911209,922146,924692,940950,966468,966895,977128,983600,985597,991810,992947,993416,993445,994055,994555,994559,994729,997092,997198,998933,1004535,1004678];
-
 function dumpResult(result) {
   var output = _.map(result, function(bug) {
     return _.map(bug, function(val, prop) {
@@ -19,9 +17,9 @@ $(function() {
   $('#query-form').submit(function(ev) {
     ev.preventDefault();
 
-    $('#query-form > form > button').html('Loading').toggleClass('btn-warning btn-primary');
+    $('#query-form button').html('Loading').toggleClass('btn-warning btn-primary');
 
-    var ids = $('#bug-ids').html().split(',');
+    var ids = $('#bug-ids').val();
 
     var functionList = [];
     _.each(ids, function(_id) {
