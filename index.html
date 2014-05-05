@@ -1,53 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Title Page</title>
+    <title>Tracking Bug Status</title>
     <meta charset="UTF-8">
     <meta name=description content="">
     <meta name=viewport content="width=device-width, initial-scale=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap CSS -->
     <link href="./css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="./css/rickshaw.min.css" rel="stylesheet" media="screen">
+    <link href="./css/style.css" rel="stylesheet" media="screen">
   </head>
   <body>
-
-
     <div class="container">
-      <form id="query-form" action="" method="POST" role="form">
+      <form id="query-form" name="query-form" action="" method="POST" role="form">
         <legend>Bugzilla Query</legend>
-      
+
         <div class="form-group">
-          <label for="">Bug Ids</label><br>
-          <textarea cols="80", rows="8" id="bug-ids">704094,717749,892935,895887,911209,922146,924692,940950,966468,966895,977128,983600,985597,991810,992947,993416,993445,994055,994555,994559,994729,997092,997198,998933,1004535,1004678</textarea>
+          <label for="input-id">Tracking Bug</label>
+          <input type="text" name="" id="input" class="form-control" value="980408">
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
     </div>
 
-    <div class="container">
-      <label for="">Results</label><br>
+    <div class="container" id="rickshaw-graph"></div>
+
+    <div class="container result-container">
+      <label for="output">Results</label><br>
       <pre id="output"></pre>
     </div>
-
-
-    <!-- jQuery -->
     <script src="./js/jquery.js"></script>
-    <!-- Bootstrap JavaScript -->
     <script src="./js/bootstrap.min.js"></script>
     <script type="text/javascript" src="./js/bz.js"></script>
     <script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
-    <script type="text/javascript" src="./js/async.js"></script>
-    <script type="text/javascript" src="./js/bz-console.js"></script>
-
-<!-- reloader stuff -->
-
+    <script src="./js/async.js"></script>
+    <script src="./js/rickshaw.min.js"></script>
+    <script src="./js/bz-console.js"></script>
     <script>
     var ws;
     function socket() {
       ws = new WebSocket("ws://127.0.0.1:9090");
       ws.onmessage = function ( e ) {
         var data = JSON.parse(e.data);
-        if ( data.r ) {
+        if (data.r) {
           location.reload();
         }
       };
