@@ -1,67 +1,56 @@
-console.error('reloaded');
-
 function dumpResult(result) {
-  var output = _.map(result, function(bug) {
-    return _.map(bug, function(val, prop) {
-      return [prop, val].join(': ')+"\n";
-    });
-  }).join("\n\n----\n");
+  // console.log(result);
+  var reduced = _.map(result, function(bug) {
+    return _.pick(bug, 'id', 'summary', 'priority', 'last_change_time');
+  });
 
-  $('#output').html(output);
+  $('#output').html(JSON.stringify(reduced, null, ' '));
+}
+
+// https://bugzilla.mozilla.org/show_bug.cgi?id=980408
+
+var bugUrlRx = /^https\:\/\/bugzilla\.mozilla\.org\/show\_bug\.cgi\?id\=[\d]+$/;
+
+function reset() {
+  $('#query-form button').html('Submit').toggleClass('btn-warning btn-primary');
+  $('.result-container').show();
 }
 
 $(function() {
   var bugzilla = bz.createClient();
 
   // bindings
+
   $('#query-form').submit(function(ev) {
     ev.preventDefault();
+    $('.result-container').hide();
+    $('#query-form button')
+      .html('Loading')
+      .toggleClass('btn-warning btn-primary');
 
-    $('#query-form button').html('Loading').toggleClass('btn-warning btn-primary');
+    var input = $('#input').val();
+    var bug_id = false;
 
-    var ids = $('#bug-ids').val();
-
-    var functionList = [];
-    _.each(ids, function(_id) {
-      functionList.push(function(callback) {
-        bugzilla.bugComments(_id, function(err, result) {
-          if (err) callback(err);
-
-          callback(null, {id: _id, first_comment: result[0].raw_text});
-        });
-      });
-
-      functionList.push(function(callback) {
-        bugzilla.getBug(_id, function(err, result) {
-          if (err) callback(err);
-
-          callback(null, {id: _id, summary: result.summary});
-        });
-      });
-    });
-
-    async.parallel(functionList, function(err, result) {
-      if (err) {
-        throw err;
+    if (bugUrlRx.test(input)) {
+        // we have a url
+      bug_id = input.split('=').pop();
+    }
+    else {
+      // we have a bug number
+      if (/^[\d]/.test(input)) {
+        bug_id = input;
       }
+    }
 
-      // dumpResult(result);
-      var grouped ={};
-      _.each(result, function (item) {
-        if (!grouped[item.id]) {
-          grouped[item.id] = {id: item.id};
-        }
-        // grouped[item.id].push(item);
-        if (item.summary) {
-          grouped[item.id].summary = item.summary;
-        }
-        if (item.first_comment) {
-          grouped[item.id].first_comment = item.first_comment;
-        }
-
+    if (bug_id) {
+      bugzilla.searchBugs({blocks: bug_id}, function(err, result) {
+        reset();
+        if (err) throw err;
+        dumpResult(result);
       });
-      $('#query-form > form > button').html('Submit').toggleClass('btn-warning btn-primary');
-      dumpResult(grouped);
-    });
+    } else {
+      // set error
+      reset();
+    }
   });
 });
