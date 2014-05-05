@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Title Page</title>
+    <meta charset="UTF-8">
+    <meta name=description content="">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  </head>
+  <body>
+
+
+    <div class="container">
+      <form id="query-form" action="" method="POST" role="form">
+        <legend>Bugzilla Query</legend>
+      
+        <div class="form-group">
+          <label for="">Bug Ids</label><br>
+          <textarea cols="80", rows="8" id="bug-ids">704094,717749,892935,895887,911209,922146,924692,940950,966468,966895,977128,983600,985597,991810,992947,993416,993445,994055,994555,994559,994729,997092,997198,998933,1004535,1004678</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+
+    <div class="container">
+      <label for="">Results</label><br>
+      <pre id="output"></pre>
+    </div>
+
+
+    <!-- jQuery -->
+    <script src="//code.jquery.com/jquery.js"></script>
+    <!-- Bootstrap JavaScript -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./bz.js"></script>
+    <script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
+    <script type="text/javascript" src="./async.js"></script>
+    <script type="text/javascript" src="./bz-console.js"></script>
+
+<!-- reloader stuff -->
+
+    <script>
+    var ws;
+    function socket() {
+      ws = new WebSocket("ws://127.0.0.1:9090");
+      ws.onmessage = function ( e ) {
+        var data = JSON.parse(e.data);
+        if ( data.r ) {
+          location.reload();
+        }
+      };
+    }
+    setInterval(function () {
+      if ( ws ) {
+        if ( ws.readyState !== 1 ) {
+          socket();
+        }
+      } else {
+        socket();
+      }
+    }, 1000);
+    </script>
+  </body>
+</html>
