@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap CSS -->
     <link href="./css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="./css/rickshaw.min.css" rel="stylesheet" media="screen">
     <link href="./css/style.css" rel="stylesheet" media="screen">
   </head>
   <body>
@@ -18,45 +17,60 @@
 
         <div class="form-group">
           <label for="input-id">Tracking Bug</label>
-          <input type="text" name="" id="input" class="form-control" value="980408">
+          <input type="text" name="" id="input" class="form-control" value="https://bugzilla.mozilla.org/show_bug.cgi?id=991806">
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
     </div>
 
-    <div class="container" id="rickshaw-graph"></div>
+    <div class="container" id="bug-graph-container">
+      <div class="row">
+        <div id="status-key-block" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+          <h3>Bug Status</h3>
+          <canvas id="status-chart"></canvas>
+          <div class="key"></div>
+        </div>
+        <div id="priority-key-block" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+          <h3>Bug Priority</h3>
+          <canvas id="priority-chart"></canvas>
+          <div class="key"></div>
+        </div>
+      </div>
+    </div>
 
     <div class="container result-container">
-      <label for="output">Results</label><br>
-      <pre id="output"></pre>
+      <table id="bug-table" class="table table-striped table-bordered table-hover">
+      </table>
+
     </div>
     <script src="./js/jquery.js"></script>
     <script src="./js/bootstrap.min.js"></script>
     <script type="text/javascript" src="./js/bz.js"></script>
     <script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
     <script src="./js/async.js"></script>
-    <script src="./js/rickshaw.min.js"></script>
+    <script src="./js/chart.min.js"></script>
     <script src="./js/bz-console.js"></script>
-    <script>
-    var ws;
-    function socket() {
-      ws = new WebSocket("ws://127.0.0.1:9090");
-      ws.onmessage = function ( e ) {
-        var data = JSON.parse(e.data);
-        if (data.r) {
-          location.reload();
-        }
-      };
+
+<script>
+var ws;
+function socket() {
+  ws = new WebSocket("ws://127.0.0.1:9090");
+  ws.onmessage = function ( e ) {
+    var data = JSON.parse(e.data);
+    if (data.r) {
+      location.reload();
     }
-    setInterval(function () {
-      if ( ws ) {
-        if ( ws.readyState !== 1 ) {
-          socket();
-        }
-      } else {
-        socket();
-      }
-    }, 1000);
-    </script>
+  };
+}
+setInterval(function () {
+  if ( ws ) {
+    if ( ws.readyState !== 1 ) {
+      socket();
+    }
+  } else {
+    socket();
+  }
+}, 1000);
+</script>
   </body>
 </html>
