@@ -70,8 +70,15 @@ function renderTable(results) {
   });
   
   // XXX now render a table using this
-  // eg '<ul class="key-list"><% _.each(colours, function(item) { %> <li><span style="background-color: <%= item.colour %>;"><%= item.label %></span></li> <% }); %></ul>'
-  console.log(filtered[0]);
+
+  // var header_tpl = Handlebars.compile($('#table-header-tpl').html());
+
+  // var header = header_tpl(fields_whitelist);
+
+  var data_tpl = Handlebars.compile($('#table-data-tpl').html());
+  var rows = data_tpl({datarows: results});
+  $('#bug-table').html(rows);
+  console.log(filtered);
 }
 
 $(function() {
@@ -93,13 +100,20 @@ $(function() {
       bug_id = input.split('=').pop();
     }
     else {
-      // we have a bug number
+      // we have a bug number??
       if (/^[\d]/.test(input)) {
         bug_id = input;
       }
     }
 
     if (bug_id) {
+
+      bugzilla.getBug(bug_id, function(err, bug) {
+        if (err) throw err;
+        console.log(bug);
+        $('#bug-title').html(bug.id + ': ' + bug.summary);
+      });
+
       bugzilla.searchBugs({blocks: bug_id}, function(err, result) {
         reset();
         if (err) throw err;

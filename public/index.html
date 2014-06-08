@@ -17,7 +17,7 @@
 
         <div class="form-group">
           <label for="input-id">Tracking Bug</label>
-          <input type="text" name="" id="input" class="form-control" value="https://bugzilla.mozilla.org/show_bug.cgi?id=991806">
+          <input type="text" name="" id="input" class="form-control" value="https://bugzilla.mozilla.org/show_bug.cgi?id=1007059">
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
@@ -27,6 +27,7 @@
       <div class="row">
         <div id="status-key-block" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
           <h3>Bug Status</h3>
+          <h3 id="bug-title"></h3>
           <canvas id="status-chart"></canvas>
           <div class="key"></div>
         </div>
@@ -42,6 +43,10 @@
       <table id="bug-table" class="table table-striped table-bordered table-hover">
       </table>
 
+
+
+
+
     </div>
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -53,5 +58,44 @@
     
     <script src="js/bz-console.js"></script>
     <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+
+    <!-- templates -->
+
+<script id="table-header-tpl" type="text/x-handlebars-template">
+<thead>
+  <tr>
+    {{#each columns}}
+    <td>this</td>
+    {{/each}}
+  </tr>
+</thead>
+</script>
+
+<script id="table-data-tpl" type="text/x-handlebars-template">
+{{#each datarows}}
+  <tbody>
+    <tr>
+      <td><a href="https://bugzilla.mozilla.org/show_bug.cgi?id={{id}}">{{id}}: {{summary}}</td>
+      <td>{{assigned_to.name}}</td>
+      <td>{{product}} / {{component}}</td>
+      <td>{{priority}}</td>
+      <td>{{status}}</td>
+      <td>{{creation_time}}</td>
+      <td>{{last_change_time}}</td>
+
+      <td>{{blocks}}</td>
+      <td>{{depends_on}}</td>
+      <td>{{resolution}}</td>
+      <td>{{creator}}</td>
+      
+      <td>{{severity}}</td>
+      <td>{{url}}</td>
+      <td>{{classification}}</td>
+      <td>{{alias}}</td>
+    </tr>
+  </tbody>
+{{/each}}
+</script>
+
   </body>
 </html>
