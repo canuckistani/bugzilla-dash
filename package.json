@@ -1,0 +1,25 @@
+{
+  "name": "bugzilla",
+  "version": "0.0.0",
+  "description": "An opinionated app That gives you some pretty graphs / overview of a bugzilla-based project (based on some opinions about how to use bugzilla).",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/canuckistani/bugzilla-dash.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/canuckistani/bugzilla-dash/issues"
+  },
+  "homepage": "https://github.com/canuckistani/bugzilla-dash",
+  "dependencies": {},
+  "devDependencies": {
+    "connect": "^2.19.4",
+    "gulp": "^3.7.0",
+    "gulp-livereload": "^2.0.0"
+  }
+}
